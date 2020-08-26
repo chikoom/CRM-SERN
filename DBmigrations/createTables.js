@@ -16,8 +16,8 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
   language: 'en',
 })
 
-const Country = sequelize.define(
-  'Coutry',
+const ClientLevel = sequelize.define(
+  'ClientLevel',
   {
     id: {
       type: Sequelize.INTEGER,
@@ -26,6 +26,35 @@ const Country = sequelize.define(
       primaryKey: true,
     },
     name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    email: {
+      type: Sequelize.TEXT,
+      allowNull: false,
+    },
+  },
+  {
+    timestamps: false,
+  }
+)
+
+const Country = sequelize.define(
+  'Country',
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      autoIncrement: true,
+      allowNull: false,
+      primaryKey: true,
+    },
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    code: {
       type: Sequelize.STRING,
       allowNull: false,
       unique: true,
@@ -58,6 +87,10 @@ const Worker = sequelize.define(
       allowNull: false,
     },
     phone: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    imageURL: {
       type: Sequelize.STRING,
       allowNull: false,
     },
@@ -95,11 +128,17 @@ const Client = sequelize.define(
     sold: {
       type: Sequelize.BOOLEAN,
       allowNull: false,
+      default: false,
+    },
+    level: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: { model: 'ClientLevels', key: 'id' },
     },
     country: {
       type: Sequelize.INTEGER,
       allowNull: false,
-      references: { model: 'Coutries', key: 'id' },
+      references: { model: 'Countries', key: 'id' },
     },
     worker: {
       type: Sequelize.INTEGER,
