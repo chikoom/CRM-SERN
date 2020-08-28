@@ -130,10 +130,20 @@ const Client = sequelize.define(
       allowNull: false,
       default: false,
     },
+    firstContact: {
+      type: Sequelize.DATEONLY,
+      allowNull: false,
+      default: Sequelize.NOW,
+    },
+    saleDate: {
+      type: Sequelize.DATEONLY,
+      allowNull: true,
+    },
     level: {
       type: Sequelize.INTEGER,
       allowNull: false,
       references: { model: 'ClientLevels', key: 'id' },
+      default: 1,
     },
     country: {
       type: Sequelize.INTEGER,
