@@ -46,9 +46,8 @@ clientsRouter.put('/:id', async (req, res) => {
   const fields = { ...req.body }
   try {
     const result = QueryHelpers.updateEntityByID(id, 'Clients', fields)
-    const updatedUser = await QueryHelpers.getClientById(id)
-    res.status(result ? 200 : 404)
-    res.send(updatedUser)
+    const updatedClient = await QueryHelpers.getClientById(id)
+    res.status(result ? 200 : 404).send(updatedClient)
   } catch (error) {
     console.error(error)
     res
