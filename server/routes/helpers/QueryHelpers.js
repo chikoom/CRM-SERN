@@ -57,7 +57,7 @@ class QueryHelpers {
     const sortQuery = sort ? `ORDER BY ${tableShortcut}.${sort}` : ''
     const sortTypeQuery = sortType || ''
     const searchQuery =
-      filter && query ? `AND cl.${filter} LIKE '%${query}%'` : ''
+      filter && query ? `AND ${tableShortcut}.${filter} LIKE '%${query}%'` : ''
     return `${searchQuery} ${sortQuery} ${sortTypeQuery} ${limitQuery} ${offsetQuery}`
   }
 
@@ -185,6 +185,163 @@ class QueryHelpers {
          SET ${setQuery}
          WHERE id = '${id}'`
     )
+  }
+
+  static getClientsSumByLevel = async () => {
+    const result = await sequelize.query(
+      'SELECT level, COUNT(*) AS total FROM Clients GROUP BY level'
+    )
+    return result[0]
+  }
+
+  static getClientsSumByWorker = async levels => {
+    const levelQuery = levels ? `AND clients.level IN (${levels}) ` : ''
+    const result = await sequelize.query(
+      `SELECT
+         workers.firstName, 
+         workers.lastName, 
+         workers.id,
+         COUNT(*) as total 
+       FROM 
+         Clients AS clients, 
+         Workers AS workers 
+       WHERE
+         workers.id = clients.worker 
+         ${levelQuery}
+       GROUP BY 
+         worker
+       ORDER BY
+         total DESC`
+    )
+    return result[0]
+  }
+
+  static getSalesSumByWorker = async () => {
+    const result = await sequelize.query(
+      `SELECT
+         workers.firstName, 
+         workers.lastName, 
+         workers.id, 
+         COUNT(*) AS total 
+       FROM 
+         Clients AS clients, 
+         Workers AS workers 
+       WHERE
+         workers.id = clients.worker
+       AND
+         clients.sold = 1
+       GROUP BY 
+         worker
+       ORDER BY
+         total DESC`
+    )
+    return result[0]
+  }
+  static getSalesSumByCountry = async () => {
+    const result = await sequelize.query(
+      `SELECT
+         countries.name, 
+         countries.id, 
+         COUNT(*) AS total 
+       FROM 
+         Clients AS clients, 
+         Countries AS countries 
+       WHERE
+         countries.id = clients.country
+       AND
+         clients.sold = 1
+       GROUP BY 
+         country
+       ORDER BY
+         total DESC`
+    )
+    return result[0]
+  }
+
+  static getSalesSumByDate = async () => {
+    const result = await sequelize.query(
+      `SELECT
+         saleDate , 
+         COUNT(*) AS total 
+       FROM 
+         Clients 
+       WHERE
+         sold = 1
+       GROUP BY 
+         saleDate
+       ORDER BY
+         saleDate DESC`
+    )
+    return result[0]
+  }
+  static getSalesSumByMonth = async () => {
+    const result = await sequelize.query(
+      `SELECT
+         YEAR(saleDate) AS year,
+         MONTH(saleDate) AS month, 
+         COUNT(*) as total 
+       FROM 
+         Clients 
+       WHERE
+         sold = 1
+       GROUP BY 
+         YEAR(saleDate),
+         MONTH(saleDate)
+       ORDER BY
+         YEAR(saleDate) DESC,
+         MONTH(saleDate) DESC`
+    )
+    return result[0]
+  }
+  static getNewClientsSumByMonth = async () => {
+    const result = await sequelize.query(
+      `SELECT
+         YEAR(firstContact) AS year,
+         MONTH(firstContact) AS month, 
+         COUNT(*) as total 
+       FROM 
+         Clients 
+       GROUP BY 
+         YEAR(firstContact),
+         MONTH(firstContact)
+       ORDER BY
+         YEAR(firstContact) DESC,
+         MONTH(firstContact) DESC`
+    )
+    return result[0]
+  }
+  static getByDateRange = async (field, from, until) => {
+    const result = await sequelize.query(
+      `SELECT
+         ${field}
+       FROM 
+         Clients 
+       WHERE 
+         ${field} BETWEEN '${from}' AND '${until}'
+       ORDER BY
+         ${field} DESC`
+    )
+    return result[0]
+  }
+
+  static getSalesDatesByWorker = async (field, from, until) => {
+    const result = await sequelize.query(
+      `SELECT
+         COUNT(clients.${field}) AS total_${field},
+         workers.firstName,
+         workers.lastName,
+         workers.id
+       FROM 
+         Clients AS clients,
+         Workers AS workers
+       WHERE 
+         clients.${field} BETWEEN '${from}' AND '${until}'
+       AND
+         clients.worker = workers.id
+       GROUP BY
+         workers.id`
+    )
+    return result[0]
   }
 }
 
