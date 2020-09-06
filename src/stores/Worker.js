@@ -1,18 +1,19 @@
 import { observable } from 'mobx'
 
-export class Worker {
+class Worker {
   @observable firstName
   @observable lastName
   @observable email
   @observable phone
-  @observable clients
-
-  constructor(id, firstName, lastName, email = '', phone = '') {
-    this._id = id
+  @observable imageURL
+  constructor(id, firstName, lastName, email, phone, imageURL) {
+    this.id = id
     this.firstName = firstName
     this.lastName = lastName
     this.email = email
     this.phone = phone
-    this.clients = []
+    this.imageURL = imageURL
   }
 }
+
+export default Worker

@@ -70,21 +70,21 @@
   - return:
     - Clients grouped by client level
 
-- GET /clients/sum/workers
+- GET /api/stats/clients/sum/workers
   - query:
     - levels - List of requires levels (1,2,3...)
   - return:
     - Number of clients per worker in query levels
 
-- GET /newclients/sum/month
+- GET /api/stats/newclients/sum/month
   - return:
     - New clients grouped month
 
-- GET /sales/sum/workers
+- GET /api/stats/sales/sum/workers
   - return:
     - Number of sales per worker
 
-- GET /daterange/sum/workers
+- GET /api/stats/daterange/sum/workers
   - query:
     - field - Required field (firstContact/saleDate)
     - from - From date (YYYY-MM-DD)
@@ -93,19 +93,19 @@
     - Number of firstContact/saleDate per worker in given time frame
 
   
-- GET /sales/sum/countries
+- GET /api/stats/sales/sum/countries
   - return:
     - Number of sales per country
 
-- GET /sales/sum/date
+- GET /api/stats/sales/sum/date
   - return:
     - Number of sales per date
   
-- GET /sales/sum/month
+- GET /api/stats/sales/sum/month
   - return:
     - Number of sales per month
 
-- GET /daterange/sum/
+- GET /api/stats/daterange/sum/
   - query:
     - field - Required field (firstContact/saleDate)
     - from - From date (YYYY-MM-DD)

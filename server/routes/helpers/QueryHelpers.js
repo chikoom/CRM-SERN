@@ -9,19 +9,21 @@ class QueryHelpers {
       selectionQuery: this.getWorkerSelectionQuery,
     },
   }
+
   static getUserSelectionQuery() {
     return `
       SELECT 
         Clients.id AS id,
-        Clients.firstName AS first, 
-        Clients.lastName AS last, 
+        Clients.firstName AS firstName,
+        Clients.lastName AS lastName,
         Clients.email AS email,
         Clients.phone AS phone,
         Clients.sold AS sold,
+        Clients.firstContact AS firstContact,
+        Clients.saleDate AS saleDate,
         clev.name AS level,
         co.name AS country,
-        wo.firstName AS workerFirst, 
-        wo.lastName As workerLast 
+        CONCAT( wo.firstName, ' ', wo.lastName) AS workerName
       FROM 
         Clients AS Clients, 
         Workers AS wo, 
@@ -253,7 +255,8 @@ class QueryHelpers {
        GROUP BY 
          country
        ORDER BY
-         total DESC`
+         total DESC
+       LIMIT 5`
     )
     return result[0]
   }
@@ -313,11 +316,14 @@ class QueryHelpers {
   static getByDateRange = async (field, from, until) => {
     const result = await sequelize.query(
       `SELECT
-         ${field}
+         ${field},
+         COUNT(*) as total
        FROM 
          Clients 
        WHERE 
          ${field} BETWEEN '${from}' AND '${until}'
+       GROUP BY
+         ${field}
        ORDER BY
          ${field} DESC`
     )
@@ -340,6 +346,30 @@ class QueryHelpers {
          clients.worker = workers.id
        GROUP BY
          workers.id`
+    )
+    return result[0]
+  }
+
+  static getAllCountries = async () => {
+    const result = await sequelize.query(
+      `SELECT
+         id, name, code
+       FROM 
+         Countries
+       ORDER BY
+         name`
+    )
+    return result[0]
+  }
+
+  static getAllLevels = async () => {
+    const result = await sequelize.query(
+      `SELECT
+         id, name, email
+       FROM 
+        ClientLevels
+       ORDER BY
+         id`
     )
     return result[0]
   }

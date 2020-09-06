@@ -1,30 +1,42 @@
 import { observable } from 'mobx'
 
-export class Client {
+class Client {
   @observable firstName
   @observable lastName
-  @observable country
   @observable email
   @observable phone
-  @observable worker
+  @observable country
+  @observable level
   @observable sold
+  @observable saleDate
+  @observable firstContact
+  @observable workerName
 
   constructor(
     id,
     firstName,
     lastName,
-    country = '',
-    email = '',
-    phone = '',
-    worker = null
+    email,
+    phone,
+    country,
+    level,
+    sold,
+    saleDate,
+    firstContact,
+    workerName
   ) {
-    this._id = id
+    this.id = id
     this.firstName = firstName
     this.lastName = lastName
-    this.country = country
     this.email = email
     this.phone = phone
-    this.worker = worker
-    this.sold = false
+    this.country = country
+    this.level = level
+    this.sold = sold
+    this.saleDate = saleDate
+    this.firstContact = firstContact
+    this.workerName = workerName
   }
 }
+
+export default Client

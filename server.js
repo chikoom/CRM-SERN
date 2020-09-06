@@ -3,6 +3,7 @@ const path = require('path')
 const clientRouter = require('./server/routes/clientsAPI')
 const workersRouter = require('./server/routes/workersAPI')
 const statsRouter = require('./server/routes/statsAPI')
+const dataRouter = require('./server/routes/dataAPI')
 const cors = require('cors')
 require('dotenv').config()
 const app = express()
@@ -31,6 +32,7 @@ app.use(function (req, res, next) {
 app.use('/api/clients/', clientRouter)
 app.use('/api/workers/', workersRouter)
 app.use('/api/stats/', statsRouter)
+app.use('/api/data/', dataRouter)
 
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'))
