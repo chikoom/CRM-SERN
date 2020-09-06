@@ -1,0 +1,15 @@
+.analytics-charts-sales-by {
+  height: 300px;
+  width: 40%;
+}
+.analytics-charts-sales-since {
+  height: 300px;
+  width: 40%;
+}
+.analytics-charts-top-employee {
+  height: 300px;
+  width: 40%;
+}
+svg.MuiSvgIcon-root {
+  font-size: 2.5rem;
+}
